@@ -3,21 +3,47 @@
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Input.H>
+#include <FL/Fl_Output.H>
+#include <FL/Fl_Shared_Image.H>
+#include <FL/Fl_JPEG_Image.H> 
+#include <FL/Fl_PNG_Image.H>
+#include <Fl/Fl_Select_Browser.H>
+#include <FL/Fl_Multiline_Input.H>
+#include <FL/Fl_Help_View.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Return_Button.H>
 #include <FL/fl_ask.H>
-#include <FL/Fl_Round_Button.H>
 #include <FL/Fl_Text_Display.H>
 #include <string>
 #include <iostream>
 #include "view.h"
 #include "shop.h"
+#include "headDlg.h"
 #include "head.h"
+#include "armDlg.h"
 #include "arm.h"
+#include "locomotorDlg.h"
 #include "locomotor.h"
+#include "torsoDlg.h"
 #include "torso.h"
+#include "batteryDlg.h"
 #include "battery.h"
+#include "robotModelDlg.h"
 #include "robotmodel.h"
 
+
 using namespace std;
+//
+// Declarations
+//
+
+class Arm_Dialog;
+class Head_Dialog;
+class Locomotor_Dialog;
+class Torso_Dialog;
+class Battery_Dialog;
+class Robot_Model_Dialog;
 
 //
 // Widgets
@@ -26,7 +52,13 @@ using namespace std;
 Fl_Window *win;
 Fl_Menu_Bar *menubar;
 View *view;
-Shop shop;
+Shop shop = Shop("Robot Shop GUI");
+Head_Dialog *head_dialog;
+Arm_Dialog *arm_dialog;
+Locomotor_Dialog *locomotor_dialog;
+Torso_Dialog *torso_dialog;
+Battery_Dialog *battery_dialog;
+Robot_Model_Dialog *robot_model_dialog;
 
 //
 // Callbacks
@@ -35,692 +67,280 @@ Shop shop;
 void CloseCB(Fl_Widget *w, void *p)
 {
 	int selection = 1;
-	if (!view->saved())
-	{
-		selection = fl_choice("Program not saved. Exit anyways?", fl_no, fl_yes, 0);
-	}
+	selection = fl_choice("Program not saved. Exit anyways?", fl_no, fl_yes, 0);
+	
 	if (selection == 1)
 	{
 		win->hide();
 	}
 }
 
-void HeadCB(Fl_Widget *w, void *p)
+void HeadCB(Fl_Widget *w, void *p) { head_dialog->show();}
+void cancel_headCB(Fl_Widget *w, void *p) { head_dialog->hide(); }
+void create_headCB(Fl_Widget *w, void *p)
 {
-	//Check for empty robot model list
-	if (shop.robotModels == NULL)
+	//Converts dialog input into varibles
+	string name = head_dialog->name();
+	string part_number = head_dialog->part_number();
+	string type = head_dialog->type();
+	string wt = head_dialog->weight();
+	double weight;
+	try
 	{
-		fl_message("Need to make a robot model first!");
-		return;
+		weight = stod(wt);
 	}
-	else
+	catch (...)
 	{
-		int flag = 0;
-
-		//Select model to add part to
-		const char *model = fl_input("Enter the model number you would like to add this part to: ");
-		int modelNum;
-		if (isdigit(*model))
-		{
-			modelNum = atoi(model); //Convert string to interger
-		}
-		else
-		{
-			throw runtime_error("Cannot convert model number into an interger.");
-		}
-
-		RobotModel *temp = shop.robotModels; //Get list of robot models
-
-		while (temp != NULL)
-		{
-			if (modelNum == temp->get_model_number()) //if model number is found
-			{
-				string name = string{ fl_input("Enter Name: ",0) };
-				const char * num = fl_input("Enter part number: ", 0);
-				int pnum;
-				if (isdigit(*num))
-				{
-					pnum = atoi(num);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert part number to integer");
-				}
-				const char *wt = fl_input("Enter weight: ", 0);
-				double weight;
-				if (isdigit(*wt))
-				{
-					weight = atof(wt);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert weight to double");
-				}
-				const char *ct = fl_input("Enter cost: ", 0);
-				double cost;
-				if (isdigit(*ct))
-				{
-					cost = atof(ct);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert cost to double");
-				}
-				string description = string{ fl_input("Enter description: ") };
-
-				Head *head = new Head(name, pnum, "Head", weight, cost, description);
-
-				if (head->check_made())
-				{
-					fl_message("A head was made!");
-				}
-				else
-				{
-					throw runtime_error("Failed to make a head.");
-				}
-
-
-				RobotPart *temp2 = temp->first; //find model's list of robot parts
-
-				if (temp2 == NULL) //check for empty parts list
-				{
-					temp->add_robotpart(head); //start parts list
-					fl_message("A head has been added to the model.");
-					temp->set_price();
-					return;
-				}
-				else
-				{
-					//search through model's parts list to see if part has already been created
-					while (temp2 != NULL)
-					{
-						//If model already has a head
-						if (temp2->get_comp_type() == "Head" || temp2->get_comp_type() == "head")
-						{
-							fl_message("There is already a head for this model!");
-							flag = 1;
-							return;
-						}
-						else
-						{
-							temp2 = temp2->next;
-						}
-					}
-
-					if (flag == 0) //If model does not already have a head
-					{
-						temp->add_robotpart(head);
-						fl_message("A head has been added to the model.");
-						temp->set_price();
-						return;
-					}
-				}
-			}
-			else
-			{
-				temp = temp->next; //go to next model
-			}
-		}
-		if (temp == NULL) // end of model list
-		{
-			fl_message("No matching robot model number was found.");
-		}
+		throw runtime_error("Cannot convert weight to double");
 	}
-}
+	string ct = head_dialog->cost();
+	double cost;
+	try
+	{
+		cost = stod(ct);
+	}
+	catch (...)
+	{
+		throw runtime_error("Cannot convert cost to double");
+	}
 
-void ArmCB(Fl_Widget *w, void *p)
+	string description = head_dialog->description();
+
+	//Take Variables and Make a Head
+	shop.create_head(name, part_number, type, weight, cost, description);
+} 
+
+
+void ArmCB(Fl_Widget *w, void *p) { arm_dialog->show(); }
+void cancel_armCB(Fl_Widget *w, void *p) { arm_dialog->hide(); }
+void create_armCB(Fl_Widget *w, void *p)
 {
-	if (shop.robotModels == NULL)
+	string name = arm_dialog->name();
+	string part_number = arm_dialog->part_number();
+	string type = arm_dialog->type();
+    string wt = arm_dialog->weight();
+	double weight;
+	try
 	{
-		fl_message("Need to make a robot model first!");
-		return;
+		weight = stod(wt);
 	}
-	else
+	catch(...)
 	{
-		int flag = 0;
-
-		//Select model to add part to
-		const char *model = fl_input("Enter the model number you would like to add this part to: ");
-		int modelNum;
-		if (isdigit(*model))
-		{
-			modelNum = atoi(model); //Convert string to interger
-		}
-		else
-		{
-			throw runtime_error("Cannot convert model number into an interger.");
-		}
-
-		RobotModel *temp = shop.robotModels;
-
-		while (temp != NULL) //Go through model list to find matching model number
-		{
-			if (modelNum == temp->get_model_number()) //if model number is found
-			{
-				string name = string{ fl_input("Enter Name: ",0) };
-				const char * num = fl_input("Enter part number: ", 0);
-				int pnum;
-				if (isdigit(*num))
-				{
-					pnum = atoi(num);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert part number to integer");
-				}
-				const char *wt = fl_input("Enter weight: ", 0);
-				double weight;
-				if (isdigit(*wt))
-				{
-					weight = atof(wt);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert weight to double");
-				}
-				const char *ct = fl_input("Enter cost: ", 0);
-				double cost;
-				if (isdigit(*ct))
-				{
-					cost = atof(ct);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert cost to double");
-				}
-				string description = string{ fl_input("Enter description: ") };
-
-				Arm *arm = new Arm(name, pnum, "Arm", weight, cost, description);
-
-				if (arm->check_made())
-				{
-					fl_message("An arm was made!");
-				}
-				else
-				{
-					throw runtime_error("Could not make an arm.");
-				}
-				RobotPart *temp2 = temp->first; //find model's list of robot parts
-
-				if (temp2 == NULL) //check for empty parts list
-				{
-					temp->add_robotpart(arm); //start parts list
-					fl_message("An arm has been added to the model.");
-					temp->set_price();
-					return;
-				}
-				else
-				{
-					//Search through parts list for arms
-					while (temp2 != NULL)
-					{
-						if (temp2->get_comp_type() == "Arm" || temp2->get_comp_type() == "arm")
-						{
-							flag++;
-							temp2 = temp2->next;
-						}
-						else
-						{
-							temp2 = temp2->next;
-						}
-					}
-
-					if (flag < 2) //add arm if model does not have 2 arms
-					{
-						temp->add_robotpart(arm);
-						fl_message("An arm has been added to the model.");
-						temp->set_price();
-						return;
-					}
-					else
-					{
-						//If model already has two arms
-						fl_message("There are already two arms for this model!");
-						return;
-					}
-				}
-			}
-			else
-			{
-				temp = temp->next; //go to next model
-			}
-		}
-		if (temp == NULL) // end of model list
-		{
-			fl_message("No matching robot model number was found.");
-		}
+		throw runtime_error("Cannot convert weight to double");
 	}
-}
-
-void LocomotorCB(Fl_Widget *w, void *p)
-{
-	RobotModel *temp = shop.robotModels; //Get list of robot models
-
-	if (shop.robotModels == NULL)
+	string ct = arm_dialog->cost();
+	double cost;
+	try
 	{
-		fl_message("Need to make a robot model first!");
-		return;
+		cost = stod(ct);
 	}
-	else
+	catch (...)
 	{
-		int flag = 0;
-
-		//Select model to add part to
-		const char *model = fl_input("Enter the model number you would like to add this part to: ");
-		int modelNum;
-		if (isdigit(*model))
-		{
-			modelNum = atoi(model); //Convert string to interger
-		}
-		else
-		{
-			throw runtime_error("Cannot convert model number into an interger.");
-		}
-
-		while (temp != NULL) //Go through model list to find matching model number
-		{
-			if (modelNum == temp->get_model_number()) //if model number is found
-			{
-				string name = string{ fl_input("Enter Name: ",0) };
-				const char * num = fl_input("Enter part number: ", 0);
-				int pnum;
-				if (isdigit(*num))
-				{
-					pnum = atoi(num);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert part number to integer");
-				}
-				const char *wt = fl_input("Enter weight: ", 0);
-				double weight;
-				if (isdigit(*wt))
-				{
-					weight = atof(wt);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert weight to double");
-				}
-				const char *ct = fl_input("Enter cost: ", 0);
-				double cost;
-				if (isdigit(*ct))
-				{
-					cost = atof(ct);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert cost to double");
-				}
-				string description = string{ fl_input("Enter description: ") };
-				const char *spd = fl_input("Enter max speed: ", 0);
-				double speed;
-				if (isdigit(*spd))
-				{
-					speed = atof(spd);
-				}
-
-				Locomotor *loco = new Locomotor(name, pnum, "Locomotor", weight, cost, description, speed);
-
-				if (loco->check_made())
-				{
-					fl_message("A locomotor was made!");
-				}
-				else
-				{
-					throw runtime_error("Cannot make a locomotor.");
-				}
-
-				RobotPart *temp2 = temp->first; //Get list of parts for model
-				if (temp2 == NULL) //Check for empty parts list
-				{
-					temp->add_robotpart(loco);
-					fl_message("A locomotor has been added to the model.");
-					temp->set_price();
-					return;
-				}
-				//Search through parts list to see if part is already in model
-				while (temp2 != NULL)
-				{
-					if (temp2->get_comp_type() == "Locomotor" || temp2->get_comp_type() == "locomotor")
-					{
-						flag++;
-						temp2 = temp2->next;
-					}
-					else
-					{
-						temp2 = temp2->next;
-					}
-				}
-				if (flag == 0) //Add part if part was not found
-				{
-					temp->add_robotpart(loco);
-					fl_message("A locomotor has been added to the model.");
-					temp->set_price();
-					return;
-				}
-				else
-				{
-					fl_message( "There is already a locomotor for this model");
-					return;
-				}
-			}
-			else
-			{
-				temp = temp->next; //go to next model
-			}
-		}
-
-	}
-	if (temp == NULL) //End of model list
-	{
-		fl_message( "No matching model number was found.");
+		throw runtime_error("Cannot convert cost to double");
 	}
 	
+	string description = arm_dialog->description();
+	
+	shop.create_arm(name, part_number, type, weight, cost, description);
 }
 
-void TorsoCB(Fl_Widget *w, void *p)
+void LocomotorCB(Fl_Widget *w, void *p) { locomotor_dialog->show(); }
+void cancel_locomotorCB(Fl_Widget *w, void *p) { locomotor_dialog->hide(); }
+void create_locomotorCB(Fl_Widget *w, void *p)
 {
-	int flag = 0;
-
-	if (shop.robotModels == NULL)
+	string name = locomotor_dialog->name();
+	string part_number = locomotor_dialog->part_number();
+	string type = locomotor_dialog->type();
+    string wt = locomotor_dialog->weight();
+	double weight;
+	try
 	{
-		fl_message("Need to make a robot model first!");
-		return;
+		weight = stod(wt);
 	}
-	else
+	catch(...)
 	{
-		//Select model to add part to
-		const char *model = fl_input("Enter the model number you would like to add this part to: ");
-		int modelNum;
-		if (isdigit(*model))
-		{
-			modelNum = atoi(model); //Convert string to interger
-		}
-		else
-		{
-			throw runtime_error("Cannot convert model number into an interger.");
-		}
-
-		RobotModel *temp = shop.robotModels;
-
-		while (temp != NULL)
-		{
-			if (modelNum == temp->get_model_number()) //if model number is found
-			{
-				string name = string{ fl_input("Enter Name: ",0) };
-				const char * num = fl_input("Enter part number: ", 0);
-				int pnum;
-				if (isdigit(*num))
-				{
-					pnum = atoi(num);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert part number to integer");
-				}
-				const char *wt = fl_input("Enter weight: ", 0);
-				double weight;
-				if (isdigit(*wt))
-				{
-					weight = atof(wt);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert weight to double");
-				}
-				const char *ct = fl_input("Enter cost: ", 0);
-				double cost;
-				if (isdigit(*ct))
-				{
-					cost = atof(ct);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert cost to double");
-				}
-				string description = string{ fl_input("Enter description: ") };
-
-				const char *bc = fl_input("Enter number of battery compartments: ");
-				int batcom;
-				if (isdigit(*bc))
-				{
-					batcom = atoi(bc);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert number of battery compartments to integer.");
-				}
-
-				Torso *torso = new Torso(name, pnum, "Torso", weight, cost, description, batcom);
-
-				if (torso->check_made())
-				{
-					fl_message("A toros was made!");
-				}
-				else
-				{
-					throw runtime_error("Cannot make a torso.");
-				}
-
-
-				RobotPart *temp2 = temp->first; //Get parts list for model
-				if (temp2 == NULL) //Check for empty parts list
-				{
-					temp->add_robotpart(torso);
-					fl_message("A torso has been added to the model.");
-					temp->set_price();
-					return;
-				}
-				//Search through parts list to see if model already has the part
-				while (temp2 != NULL)
-				{
-					if (temp2->get_comp_type() == "Torso" || temp2->get_comp_type() == "torso")
-					{
-						flag++;
-						temp2 = temp2->next;
-					}
-					else
-					{
-						temp2 = temp2->next;
-					}
-				}
-				if (flag == 0) //Add part if it was not found
-				{
-					temp->add_robotpart(torso);
-					fl_message("A torso has been added to the model.");
-					temp->set_price();
-					return;
-				}
-				else
-				{
-					fl_message( "There is already a Torso for this model.");
-					return;
-				}
-			}
-			else
-			{
-				temp = temp->next;
-			}
-		}
-		if(temp == NULL)
-		{
-			fl_message("No matching model number was found.");
-		}
+		throw runtime_error("Cannot convert weight to double");
+	}
+	string ct = locomotor_dialog->cost();
+	double cost;
+	try
+	{
+		cost = stod(ct);
+	}
+	catch (...)
+	{
+		throw runtime_error("Cannot convert cost to double");
+	}
+	
+	string description = locomotor_dialog->description();
+	string spd = locomotor_dialog->speed();
+	double speed;
+	try
+	{
+		speed = stod(spd);
+	}
+	catch (...)
+	{
+		throw runtime_error("Cannot convert speed to double");
 	}
 
+	shop.create_locomotor(name, part_number, type, weight, cost, description, speed);
 }
 
-void BatteryCB(Fl_Widget *w, void *p)
+void TorsoCB(Fl_Widget *w, void *p) { torso_dialog->show(); }
+void cancel_torsoCB(Fl_Widget *w, void *p) { torso_dialog->hide(); }
+void create_torsoCB(Fl_Widget *w, void *p)
 {
-	int flag = 0;
-
-	if (shop.robotModels == NULL)
+	string name = torso_dialog->name();
+	string part_number = torso_dialog->part_number();
+	string type = torso_dialog->type();
+	string wt = torso_dialog->weight();
+	double weight;
+	try
 	{
-		fl_message("Need to make a robot model first!");
-		return;
+		weight = stod(wt);
 	}
-	else
+	catch (...)
 	{
-		//Select model to add part to
-		const char *model = fl_input("Enter the model number you would like to add this part to: ");
-		int modelNum;
-		if (isdigit(*model))
-		{
-			modelNum = atoi(model); //Convert string to interger
-		}
-		else
-		{
-			throw runtime_error("Cannot convert model number into an interger.");
-		}
-
-		RobotModel *temp = shop.robotModels;
-
-		while (temp != NULL)
-		{
-			if (modelNum == temp->get_model_number()) //if model number is found
-			{
-				string name = string{ fl_input("Enter Name: ",0) };
-				const char * num = fl_input("Enter part number: ", 0);
-				int pnum;
-				if (isdigit(*num))
-				{
-					pnum = atoi(num);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert part number to integer");
-				}
-				const char *wt = fl_input("Enter weight: ", 0);
-				double weight;
-				if (isdigit(*wt))
-				{
-					weight = atof(wt);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert weight to double");
-				}
-				const char *ct = fl_input("Enter cost: ", 0);
-				double cost;
-				if (isdigit(*ct))
-				{
-					cost = atof(ct);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert cost to double");
-				}
-				string description = string{ fl_input("Enter description: ") };
-
-				const char *pow = fl_input("Enter power: ", 0);
-				double power;
-				if (isdigit(*pow))
-				{
-					power = atof(pow);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert power to double");
-				}
-				const char *eny = fl_input("Enter energy: ", 0);
-				double energy;
-				if (isdigit(*eny))
-				{
-					energy = atof(eny);
-				}
-				else
-				{
-					throw runtime_error("Cannot convert energy to double");
-				}
-
-				Battery *bat = new Battery(name, pnum, "Battery", weight, cost, description, power, energy);
-
-				if (bat->check_made())
-				{
-					fl_message("A battery was made!");
-				}
-				else
-				{
-					throw runtime_error("Cannot make a battery.");
-				}
-
-				RobotPart *temp2 = temp->first; //Get model's parts list
-												//Search through model list for a torso
-				while (temp2 != NULL)
-				{
-					if (temp2->get_comp_type() == "Torso" || temp2->get_comp_type() == "torso")
-					{
-						flag = 1;
-						break;
-					}
-					else
-					{
-						temp2 = temp2->next;
-					}
-				}
-				if (flag == 1) // If there is a torso for the model
-				{
-					flag = 0;
-
-					temp2 = temp->first;
-					//Search through parts list for batteries
-					while (temp2 != NULL)
-					{
-						if (temp2->get_comp_type() == "Battery" || temp2->get_comp_type() == "battery")
-						{
-							flag++;
-							temp2 = temp2->next;
-						}
-						else
-						{
-							temp2 = temp2->next;
-						}
-					}
-					if (flag != temp->get_bat_compart()) // Check for number of battery compartments
-					{
-						//add battery if there is room for another
-						temp->add_robotpart(bat);
-						fl_message("A battery has been added to the model.");
-						temp->set_price();
-						return;
-					}
-					else
-					{
-						fl_message("All of the battery compartments have already been filled for this model.");
-						return;
-					}
-				}
-				else
-				{
-					fl_message("No torso was found for this model.Must have a torso to add batteries!");
-					return;
-				}
-			}
-			else
-			{
-				temp = temp->next; //Go to next model
-			}
-		}
-		if (temp == NULL)
-		{
-			fl_message("No matching model number was found.");
-		}
+		throw runtime_error("Cannot convert weight to double");
 	}
+	string ct = torso_dialog->cost();
+	double cost;
+	try
+	{
+		cost = stod(ct);
+	}
+	catch (...)
+	{
+		throw runtime_error("Cannot convert cost to double");
+	}
+
+	string description = torso_dialog->description();
+
+	shop.create_torso(name, part_number, type, weight, cost, description);
 }
 
-void ModelCB(Fl_Widget *w, void *p)
+void BatteryCB(Fl_Widget *w, void *p) { battery_dialog->show(); }
+void cancel_batteryCB(Fl_Widget *w, void *p) { battery_dialog->hide(); }
+void create_batteryCB(Fl_Widget *w, void *p)
 {
-	shop.add_robot_model();
+	string name = battery_dialog->name();
+	string part_number = battery_dialog->part_number();
+	string type = battery_dialog->type();
+	string wt = battery_dialog->weight();
+	double weight;
+	try
+	{
+		weight = stod(wt);
+	}
+	catch (...)
+	{
+		throw runtime_error("Cannot convert weight to double");
+	}
+	string ct = battery_dialog->cost();
+	double cost;
+	try
+	{
+		cost = stod(ct);
+	}
+	catch (...)
+	{
+		throw runtime_error("Cannot convert cost to double");
+	}
+
+	string description = battery_dialog->description();
+	string pw = battery_dialog->power();
+	double power;
+	try
+	{
+		power = stod(pw);
+	}
+	catch (...)
+	{
+		throw runtime_error("Cannot convert power to double");
+	}
+	string en = battery_dialog->energy();
+	double energy;
+	try
+	{
+		energy = stod(en);
+	}
+	catch (...)
+	{
+		throw runtime_error("Cannot convert energy to double");
+	}		
+
+	shop.create_battery(name, part_number, type, weight, cost, description, power, energy);
+} 
+
+void ModelCB(Fl_Widget *w, void *p) { robot_model_dialog->show(); }
+void cancel_robot_modelCB(Fl_Widget *w, void *p) { robot_model_dialog->hide(); }
+void create_robot_modelCB(Fl_Widget *w, void *p)
+{
+	string name = robot_model_dialog->name();
+	string m_number = robot_model_dialog->model_number();
+	string head = robot_model_dialog->head();
+	string right_arm = robot_model_dialog->right_arm();
+	string left_arm = robot_model_dialog->left_arm();
+	string locomotor = robot_model_dialog->locomotor();
+	string torso = robot_model_dialog->torso();
+	string battery1 = robot_model_dialog->battery1();
+	string battery2 = robot_model_dialog->battery2();
+	string battery3 = robot_model_dialog->battery3();
+
+	shop.add_robot_model(name, m_number, head, right_arm, left_arm, locomotor, torso, battery1, battery2, battery3);
 	fl_message("Robot Model Created!");
 }
 
-/*void ListmodelsCB(Fl_Widget *w, void *p)
+void show_modelCB(Fl_Widget *w, void *p)
 {
-	Fl_Text_Display *ls = new Fl_Text_Display(rm->to_string());
+			Fl_Window *m_win2 = new Fl_Window(340, 270, "Robot Model List");
+			Fl_Select_Browser *b = (Fl_Select_Browser*)w;
+			int index = b->value();
+
+			RobotModel *temp = shop.robotModels;
+			for (int i = 1; i < index; i++)
+			{
+				temp = temp->next;
+			}
+			string p_model = temp->to_string();
+			const char *model = p_model.c_str();
+			Fl_Help_View *out = new Fl_Help_View(30, 30, 210, 150, "Robot Models");
+			out->value(model);
+
+			m_win2->end();
+			m_win2->set_non_modal();
+			m_win2->show();
+}
+
+void ListmodelsCB(Fl_Widget *w, void *p)
+{
+	RobotModel *temp = shop.robotModels;
+	int count = 0;
+	Fl_Window *m_win = new Fl_Window(340, 270, "Robot Model List");
+	Fl_Select_Browser *models = new Fl_Select_Browser(30, 30, 210, 150, "Robot Models");
+	while (temp != NULL)
+	{
+		string p_name = temp->get_name();
+		const char *name = p_name.c_str();
+		models->add(name);
+		
+		//Fl_Output *out = new Fl_Output(120, 10, 210, 25, "Name:");
+		//out->value(name); 
+		
+		//Fl_Help_View *out = new Fl_Help_View(30, 30, 210, 150, "Robot Models");
+		//out->value(model);
+		temp = temp->next;
+
+	}
+
+	models->callback((Fl_Callback *)show_modelCB, 0);
+	m_win->end();
+	m_win->set_non_modal();
+	m_win->show();
+}
 	
 
-}*/
 
 
 //
@@ -736,7 +356,7 @@ Fl_Menu_Item menuitems[] = {
 			{"&Head",0,(Fl_Callback *)HeadCB},
 			{"&Arm", 0,(Fl_Callback *)ArmCB},
 			{"&Locomotor",0,(Fl_Callback *)LocomotorCB},
-			{"&Tosro",0,(Fl_Callback *)TorsoCB},
+			{"&Torso",0,(Fl_Callback *)TorsoCB},
 			{"&Battery",0,(Fl_Callback *)BatteryCB},
 			{0},
 		{"&Robot Model",0,(Fl_Callback *)ModelCB},
@@ -752,9 +372,18 @@ Fl_Menu_Item menuitems[] = {
 //
 
 int main() {
+	//fl_register_images();
 	//Set window length and height
 	const int X = 640;
 	const int Y = 480;
+
+	// Create Dialogs
+	head_dialog = new Head_Dialog{};
+	arm_dialog = new Arm_Dialog{};
+	locomotor_dialog = new Locomotor_Dialog{};
+	torso_dialog = new Torso_Dialog{};
+	battery_dialog = new Battery_Dialog{};
+	robot_model_dialog = new Robot_Model_Dialog{};
 
 	//Create a window
 	win = new Fl_Window{ X,Y,"Robot Shop 2016" };

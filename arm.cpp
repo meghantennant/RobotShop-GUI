@@ -7,7 +7,7 @@
 using namespace std;
 
 string Arm::get_name() { return name; }
-int Arm::get_part_number() { return partNumber; }
+string Arm::get_part_number() { return partNumber; }
 string Arm::get_comp_type() { return componentType; }
 double Arm::get_weight() { return weight; }
 double Arm::get_cost() { return cost; }
@@ -24,8 +24,8 @@ void Arm::to_string()
 	cout << "Description: " << get_description() << endl;
 }
 
-int Arm::power_consumed(int speed)
+double Arm::power_consumed(double speed)
 {
-	int power = (get_weight()*4.4) * speed; //convert pounds to Newtons to get Watts
+	double power = (get_weight()*4.4) * speed; //convert pounds to Newtons to get Watts
 	return power; // in Watts
 }
