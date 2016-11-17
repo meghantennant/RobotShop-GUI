@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{38F732D8-11D8-48E6-AB16-12D3565E117A}</ProjectGuid>
+    <RootNamespace>RobotShop2</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fltk.lib;fltkzlib.lib;wsock32.lib;comctl32.lib;fltkjpegd.lib;fltkpngd.lib;fltkimages.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Link>
+      <IgnoreSpecificDefaultLibraries>libcd.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fltk.lib;fltkzlib.lib;wsock32.lib;comctl32.lib;fltkjpegd.lib;fltkpngd.lib;fltkimages.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcd.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="arm.h" />
+    <ClInclude Include="armDlg.h" />
+    <ClInclude Include="battery.h" />
+    <ClInclude Include="batteryDlg.h" />
+    <ClInclude Include="customer.h" />
+    <ClInclude Include="customerDlg.h" />
+    <ClInclude Include="head.h" />
+    <ClInclude Include="headDlg.h" />
+    <ClInclude Include="locomotor.h" />
+    <ClInclude Include="locomotorDlg.h" />
+    <ClInclude Include="robotmodel.h" />
+    <ClInclude Include="robotModelDlg.h" />
+    <ClInclude Include="robotPart.h" />
+    <ClInclude Include="shop.h" />
+    <ClInclude Include="torso.h" />
+    <ClInclude Include="torsoDlg.h" />
+    <ClInclude Include="view.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\PartsTest.cpp" />
+    <ClCompile Include="arm.cpp" />
+    <ClCompile Include="armTest.cpp" />
+    <ClCompile Include="battery.cpp" />
+    <ClCompile Include="batteryTest.cpp" />
+    <ClCompile Include="customer.cpp" />
+    <ClCompile Include="head.cpp" />
+    <ClCompile Include="headTest.cpp" />
+    <ClCompile Include="locomotor.cpp" />
+    <ClCompile Include="locomotorTest.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="robotmodel.cpp" />
+    <ClCompile Include="robotmodelTest.cpp" />
+    <ClCompile Include="shop.cpp" />
+    <ClCompile Include="torso.cpp" />
+    <ClCompile Include="torsoTest.cpp" />
+    <ClCompile Include="view.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\1325\Homework_6\arm_left_orange.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\arm_left_orange_power.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\arm_left_power.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\arm_left_silver_disk.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\arm_right_orange.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\arm_right_orange_power.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\arm_right_power.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\arm_right_silver_disk.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\battery_blue.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\battery_green.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\battery_red.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\battery_yellow.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\full_business_can.jpg" />
+    <Image Include="..\..\..\..\1325\Homework_6\full_button_can.jpg" />
+    <Image Include="..\..\..\..\1325\Homework_6\full_humanoid_soldier.jpg" />
+    <Image Include="..\..\..\..\1325\Homework_6\full_medic_can.jpg" />
+    <Image Include="..\..\..\..\1325\Homework_6\full_orange_can.jpg" />
+    <Image Include="..\..\..\..\1325\Homework_6\full_orange_humanoid_meditating.jpg" />
+    <Image Include="..\..\..\..\1325\Homework_6\full_orange_humanoid_with_laptop_computer.jpg" />
+    <Image Include="..\..\..\..\1325\Homework_6\full_white_can_w_antennae.jpg" />
+    <Image Include="..\..\..\..\1325\Homework_6\head_antennae.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\head_antennaeless.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\head_asymmetric_antenna.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\head_orange.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\head_orange_antennae.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\head_satellite_dish.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\head_smart.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\head_soldier.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\locomotor_fancy_legs.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\locomotor_flatfoot.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\locomotor_orange.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\locomotor_orange_flatfoot.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\torso_button.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\torso_can.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\torso_orange.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\torso_orange_can.png" />
+    <Image Include="..\..\..\..\1325\Homework_6\torso_soldier.png" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
