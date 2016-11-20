@@ -7,7 +7,7 @@
 using namespace std;
 
 string Battery::get_name() { return name; }
-int Battery::get_part_number() { return partNumber; }
+string Battery::get_part_number() { return partNumber; }
 string Battery::get_comp_type() { return componentType; }
 double Battery::get_weight() { return weight; }
 double Battery::get_cost() { return cost; }

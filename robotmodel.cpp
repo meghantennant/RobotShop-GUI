@@ -1,81 +1,25 @@
 #include <windows.h>
-#include <iostream>
+#include <sstream>
 #include <string>
+#include "shop.h"
 #include "robotmodel.h"
-#include "robotpart.h"
+#include "head.h"
 
 using namespace std;
 
-void RobotModel::add_robotpart(RobotPart *rp) //Adds a Robot part to the linked list 'first'
-{
-	if (first == NULL) //check if list is empty
-	{
-		first = rp;
-		rp->next = NULL;
-	}
-	else
-	{
-		RobotPart *temp = first;
-		while (temp->next != NULL) // go to end of list
-		{
-			temp = temp->next;
-		}
-		temp->next = rp; //add robot part to list
-		rp->next = NULL;
-	}
-}
 
-void RobotModel::set_bat_compart(int num) //sets number of battery compartments for the model
-{
-	batCompartments = num;
-}
+void RobotModel::set_price(double model_cost) { price = model_cost; } 
+void RobotModel::set_weight(double model_weight) { weight = model_weight; }
+double RobotModel::get_price() { return price; }
+double RobotModel::get_weight() { return weight; }
 
-int RobotModel::get_bat_compart()
+string RobotModel::to_string()
 {
-	return batCompartments;
-}
-int RobotModel::get_model_number()
-{
-	return modelNumber;
-}
+	ostringstream ss;
+	ss << price;
+	string m_price = ss.str();
 
-void RobotModel::set_price() //Goes through list of parts for model and adds up prices of each part.
-{
-	RobotPart *temp = first;
-	price = 0;
-	while (temp != NULL)
-	{
-		price += temp->get_cost();
-		temp = temp->next;
-	}
-}
-
-string RobotModel::get_name()
-{
-	return name;
-}
-
-double RobotModel::get_price()
-{
-	return price;
-}
-
-double RobotModel::get_weight()
-{
-	RobotPart *temp = first;
-	double weight = 0;
-	while (temp != NULL)
-	{
-		weight += temp->get_weight();
-		temp = temp->next;
-	}
-
-	return weight;
-}
-
-void RobotModel::to_string()
-{
-	cout << "Name: " << name << endl;
-	cout << "Model Number: " << modelNumber << endl;
-	cout << "Price: " << price << endl;
+	return ("Name: " + name + "     Model Number: " + model_number + "      Head: " + head + "     Right Arm: " + right_arm +
+		"     Left Arm: " + left_arm + "     Locomotor: " + locomotor + "     Torso: " + torso + "     Battery 1: " + battery1 +
+		"      Battery 2: " + battery2 + "     Battery 3: " + battery3 + "     Price: $" + m_price);
 }

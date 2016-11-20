@@ -5,7 +5,7 @@
 
 class Battery : public RobotPart {
 public:
-	Battery(string p_name, int p_partNumber, string p_componentType, double p_weight, double p_cost, string p_description, double p_power, double p_energy)
+	Battery(string p_name, string p_partNumber, string p_componentType, double p_weight, double p_cost, string p_description, double p_power, double p_energy)
 		: RobotPart(p_name, p_partNumber, p_componentType, p_weight, p_cost, p_description)
 	{
 		energy = p_energy;
@@ -13,7 +13,7 @@ public:
 		isMade = true;
 	};
 	string get_name();
-	int get_part_number();
+	string get_part_number();
 	string get_comp_type();
 	double get_weight();
 	double get_cost();
@@ -22,6 +22,7 @@ public:
 	double get_energy();
 	bool check_made();
 	void to_string();
+	Battery *next; //points to the next battery in the robot parts list
 
 private:
 	double energy;

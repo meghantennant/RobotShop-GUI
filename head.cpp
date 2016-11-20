@@ -6,7 +6,7 @@
 using namespace std;
 
 string Head::get_name() { return name; }
-int Head::get_part_number() { return partNumber; }
+string Head::get_part_number() { return partNumber; }
 string Head::get_comp_type() { return componentType; }
 double Head::get_weight() { return weight; }
 double Head::get_cost() { return cost; }

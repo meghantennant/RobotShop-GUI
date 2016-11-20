@@ -7,7 +7,7 @@
 using namespace std;
 
 string Locomotor::get_name() { return name; }
-int Locomotor::get_part_number() { return partNumber; }
+string Locomotor::get_part_number() { return partNumber; }
 string Locomotor::get_comp_type() { return componentType; }
 double Locomotor::get_weight() { return weight; }
 double Locomotor::get_cost() { return cost; }
@@ -26,7 +26,7 @@ void Locomotor::to_string()
 	cout << "Description: " << get_description() << endl;
 }
 
-int Locomotor::power_consumed(int speed)
+double Locomotor::power_consumed(double speed)
 {
 	double power = (get_weight()*4.4) * speed; //convert pounds to Newtons to get Watts
 	return power; // in Watts
